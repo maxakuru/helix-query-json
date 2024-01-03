@@ -14,14 +14,17 @@ export default async function handleRequest(request, env) {
   }
 
   const parts = url.pathname.split('/');
-  const [owner, repo, ref, query, ...rest] = parts.slice(2);
-  if(rest.length || !owner || !repo || !ref || !query) {
+  const [owner, repo, prodUrl, query, /* file */] = parts.slice(2);
+  if(!owner || !repo || !prodUrl || !query) {
     return errorResponse(404, 'not found', 'not found');
   }
 
   const qps = url.searchParams;
   if(!qps.has('domainkey') && DEFAULT_DOMAIN_KEY) {
     qps.set('domainkey', DEFAULT_DOMAIN_KEY);
+  }
+  if(!qps.has('url')) {
+    qps.set('url', decodeURIComponent(prodUrl));
   }
 
   const queryUrl = new URL(`${RUN_QUERY_ENDPOINT}/${query}?${qps.toString()}`);

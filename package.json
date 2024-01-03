@@ -1,0 +1,25 @@
+{
+  "name": "helix-query-json",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "itty-router": "4.0.26"
+  },
+  "devDependencies": {
+    "esbuild": "0.19.11",
+    "eslint": "8.56.0",
+    "wrangler": "3.22.2"
+  },
+  "lint-staged": {
+    "*.(ts|js|mjs|cjs)": "eslint"
+  }
+}

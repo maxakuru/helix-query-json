@@ -1,0 +1,15 @@
+name = "helix-query-json"
+main = "dist/index.js"
+
+account_id = "852dfa4ae1b0d579df29be65b986c101"
+workers_dev = true
+compatibility_date = "2022-06-13"
+
+[build]
+command = "node ./build.js"
+
+[vars]
+RUN_QUERY_ENDPOINT = "https://helix-pages.anywhere.run/helix-services/run-query@v3"
+
+# The necessary secrets are:
+# - DEFAULT_DOMAIN_KEY -> used when `domainkey` query param is not provided

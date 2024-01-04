@@ -10,6 +10,8 @@ command = "node ./build.js"
 
 [vars]
 RUN_QUERY_ENDPOINT = "https://helix-pages.anywhere.run/helix-services/run-query@v3"
+STORE_QUERY_REPO = "helix-query-storage"
+STORE_QUERY_OWNER = "maxakuru"
 
 # The necessary secrets are:
 # - DEFAULT_DOMAIN_KEY -> used when `domainkey` query param is not provided

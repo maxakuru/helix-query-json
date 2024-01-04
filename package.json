@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky install"
   },
   "author": "",
   "license": "Apache-2.0",
@@ -15,8 +16,12 @@
     "itty-router": "4.0.26"
   },
   "devDependencies": {
+    "@adobe/eslint-config-helix": "2.0.5",
+    "@cloudflare/workers-types": "4.20231218.0",
     "esbuild": "0.19.11",
     "eslint": "8.56.0",
+    "husky": "8.0.3",
+    "lint-staged": "15.2.0",
     "wrangler": "3.22.2"
   },
   "lint-staged": {

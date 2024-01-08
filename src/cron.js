@@ -15,7 +15,7 @@ const SITES = [
 ];
 
 const QUERIES = [
-  'rum-dashboard',
+  'rum-pageviews',
 ];
 
 /**
@@ -30,7 +30,7 @@ export default async function handleScheduled(event, env) {
     STORE_QUERY_OWNER: owner,
     ADMIN_ENDPOINT,
   } = env;
-  const now = new Date(event.scheduledTime).toISOString();
+  const [now] = new Date(event.scheduledTime).toISOString().split(':');
 
   const adminUrl = (route, path) => `${ADMIN_ENDPOINT}/${route}/${owner}/${repo}/main${path}`;
 
@@ -40,8 +40,11 @@ export default async function handleScheduled(event, env) {
         async (query) => {
           const path = `/${site}/${query}/${now}.json`;
           let resp = await fetch(adminUrl('preview', path));
+          console.log('previewed: ', resp.status);
+
           if (resp.ok) {
             resp = await fetch(adminUrl('publish', path));
+            console.log('published: ', resp.status);
           }
           return resp;
         },

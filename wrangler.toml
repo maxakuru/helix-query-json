@@ -8,10 +8,14 @@ compatibility_date = "2022-06-13"
 [build]
 command = "node ./build.js"
 
+[triggers]
+crons = [ "* */1 * * *" ]
+
 [vars]
 RUN_QUERY_ENDPOINT = "https://helix-pages.anywhere.run/helix-services/run-query@v3"
 STORE_QUERY_REPO = "helix-query-storage"
 STORE_QUERY_OWNER = "maxakuru"
+ADMIN_ENDPOINT = "https://admin.hlx.page"
 
 # The necessary secrets are:
 # - DEFAULT_DOMAIN_KEY -> used when `domainkey` query param is not provided

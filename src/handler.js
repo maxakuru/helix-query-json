@@ -12,6 +12,12 @@
 
 import { errorResponse } from './util.js';
 
+const BASE_QUERY_PARAMS = {
+  rum_pageviews: {
+    offset: 1,
+  },
+};
+
 /**
  * @param {Request} request
  * @param {Record<string,string>} env
@@ -27,6 +33,14 @@ export default async function handleRequest(request, env) {
 
   const parts = url.pathname.split('/');
   const [owner, repo, prodUrl, query] = parts.slice(2);
+
+  // const configs = rest.slice(0, -1);
+  // const config = {};
+  // configs.forEach((c) => {
+  //   const [key, value] = c.split('.');
+  //   config[key] = value;
+  // });
+
   if (!owner || !repo || !prodUrl || !query) {
     return errorResponse(404, 'not found', 'not found');
   }
@@ -38,6 +52,13 @@ export default async function handleRequest(request, env) {
   if (!qps.has('url')) {
     qps.set('url', decodeURIComponent(prodUrl));
   }
+  Object.values(BASE_QUERY_PARAMS[query])
+    .forEach(([key, value]) => {
+      qps.set(key, value);
+    });
+  // Object.keys(config).forEach((key) => {
+  //   qps.set(key, config[key]);
+  // });
 
   const queryUrl = new URL(`${RUN_QUERY_ENDPOINT}/${query}?${qps.toString()}`);
   console.debug('queryUrl: ', queryUrl);

@@ -18,6 +18,12 @@ const QUERIES = [
   'rum-pageviews',
 ];
 
+const error = (msg, resp) => {
+  const err = new Error(msg);
+  err.status = resp.status;
+  return err;
+};
+
 /**
  * Publish query results
  *
@@ -39,13 +45,22 @@ export default async function handleScheduled(event, env) {
       (site) => QUERIES.map(
         async (query) => {
           const path = `/${site}/${query}/${now}.json`;
-          let resp = await fetch(adminUrl('preview', path));
-          console.log('previewed: ', resp.status);
+          let url = adminUrl('preview', path);
+          let resp = await fetch(url);
+          console.debug('previewed: ', url, resp.status);
 
           if (resp.ok) {
-            resp = await fetch(adminUrl('publish', path));
-            console.log('published: ', resp.status);
+            url = adminUrl('live', path);
+            resp = await fetch(url);
+            console.debug('published: ', url, resp.status);
+
+            if (!resp.ok) {
+              throw error('failed to publish', resp);
+            }
+          } else {
+            throw error('failed to publish', resp);
           }
+
           return resp;
         },
       ),

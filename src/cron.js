@@ -46,12 +46,12 @@ export default async function handleScheduled(event, env) {
         async (query) => {
           const path = `/${site}/${query}/${now}.json`;
           let url = adminUrl('preview', path);
-          let resp = await fetch(url);
+          let resp = await fetch(url, { method: 'POST' });
           console.debug('previewed: ', url, resp.status);
 
           if (resp.ok) {
             url = adminUrl('live', path);
-            resp = await fetch(url);
+            resp = await fetch(url, { method: 'POST' });
             console.debug('published: ', url, resp.status);
 
             if (!resp.ok) {

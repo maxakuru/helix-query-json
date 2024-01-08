@@ -13,7 +13,7 @@
 import { errorResponse } from './util.js';
 
 const BASE_QUERY_PARAMS = {
-  rum_pageviews: {
+  'rum-pageviews': {
     offset: 1,
   },
 };
@@ -52,7 +52,7 @@ export default async function handleRequest(request, env) {
   if (!qps.has('url')) {
     qps.set('url', decodeURIComponent(prodUrl));
   }
-  Object.values(BASE_QUERY_PARAMS[query])
+  Object.entries(BASE_QUERY_PARAMS[query])
     .forEach(([key, value]) => {
       qps.set(key, value);
     });

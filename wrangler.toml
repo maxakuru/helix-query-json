@@ -9,7 +9,7 @@ compatibility_date = "2022-06-13"
 command = "node ./build.js"
 
 [triggers]
-crons = [ "0 * * * *" ]
+crons = [ "*/3 * * * *" ]
 
 [vars]
 RUN_QUERY_ENDPOINT = "https://helix-pages.anywhere.run/helix-services/run-query@v3"

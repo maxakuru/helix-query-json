@@ -4,6 +4,10 @@
   "description": "",
   "type": "module",
   "main": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maxakuru/helix-query-json.git"
+  },
   "scripts": {
     "dev": "NODE_ENV=development wrangler dev",
     "build": "node ./build.js",

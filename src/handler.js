@@ -12,9 +12,20 @@
 
 import { errorResponse } from './util.js';
 
-const BASE_QUERY_PARAMS = {
+const QUERY_SETTINGS = {
   'rum-pageviews': {
-    offset: 1,
+    params: {
+      offset: 1,
+      interval: 30,
+      limit: 100,
+    },
+  },
+  'rum-dashboard': {
+    params: {
+      offset: 1,
+      interval: 30,
+      limit: 100,
+    },
   },
 };
 
@@ -32,7 +43,7 @@ export default async function handleRequest(request, env) {
   }
 
   const parts = url.pathname.split('/');
-  const [owner, repo, prodUrl, query] = parts.slice(2);
+  const [owner, repo, prodUrl, query, timezone] = parts.slice(2);
 
   // const configs = rest.slice(0, -1);
   // const config = {};
@@ -41,10 +52,11 @@ export default async function handleRequest(request, env) {
   //   config[key] = value;
   // });
 
-  if (!owner || !repo || !prodUrl || !query) {
+  if (!owner || !repo || !prodUrl || !query || !timezone) {
     return errorResponse(404, 'not found', 'not found');
   }
 
+  const settings = QUERY_SETTINGS[query] || {};
   const qps = url.searchParams;
   if (!qps.has('domainkey') && DEFAULT_DOMAIN_KEY) {
     qps.set('domainkey', DEFAULT_DOMAIN_KEY);
@@ -52,7 +64,10 @@ export default async function handleRequest(request, env) {
   if (!qps.has('url')) {
     qps.set('url', decodeURIComponent(prodUrl));
   }
-  Object.entries(BASE_QUERY_PARAMS[query])
+  if (!qps.has('timezone')) {
+    qps.set('timezone', timezone);
+  }
+  Object.entries(settings.params || {})
     .forEach(([key, value]) => {
       qps.set(key, value);
     });

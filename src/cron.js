@@ -12,10 +12,23 @@
 
 const SITES = [
   'owner/repo/blog.adobe.com',
+  'hlxsites/danaher-ls-aem/lifesciences.danaher.com',
 ];
 
 const QUERIES = [
   'rum-pageviews',
+  'rum-dashboard',
+];
+
+const TIMEZONES = [
+  'PST8PDT',
+  'EST',
+  'UTC',
+  'CET',
+  // 'EET',
+  // 'AEST',
+  // 'JST',
+  // 'IST',
 ];
 
 const error = (msg, resp) => {
@@ -36,34 +49,35 @@ export default async function handleScheduled(event, env) {
     STORE_QUERY_OWNER: owner,
     ADMIN_ENDPOINT,
   } = env;
-  const [now] = new Date(event.scheduledTime).toISOString().split(':');
+  const [date] = new Date(event.scheduledTime).toISOString().split('T');
 
   const adminUrl = (route, path) => `${ADMIN_ENDPOINT}/${route}/${owner}/${repo}/main${path}`;
 
   return Promise.allSettled(
     SITES.map(
-      (site) => QUERIES.map(
-        async (query) => {
-          const path = `/${site}/${query}/${now}.json`;
-          let url = adminUrl('preview', path);
-          let resp = await fetch(url, { method: 'POST' });
-          console.debug('previewed: ', url, resp.status);
+      (site) => TIMEZONES.map(
+        (tz) => QUERIES.map(
+          async (query) => {
+            const path = `/${site}/${query}/${tz}/${date}.json`;
+            let url = adminUrl('preview', path);
+            let resp = await fetch(url, { method: 'POST' });
+            console.debug('previewed: ', url, resp.status);
 
-          if (resp.ok) {
-            url = adminUrl('live', path);
-            resp = await fetch(url, { method: 'POST' });
-            console.debug('published: ', url, resp.status);
+            if (resp.ok) {
+              url = adminUrl('live', path);
+              resp = await fetch(url, { method: 'POST' });
+              console.debug('published: ', url, resp.status);
 
-            if (!resp.ok) {
-              throw error('failed to publish', resp);
+              if (!resp.ok) {
+                throw error('failed to publish', resp);
+              }
+            } else {
+              throw error('failed to preview', resp);
             }
-          } else {
-            throw error('failed to publish', resp);
-          }
-
-          return resp;
-        },
-      ),
+            return resp;
+          },
+        ),
+      ).flat(),
     ).flat(),
   );
 }

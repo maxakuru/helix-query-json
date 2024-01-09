@@ -9,7 +9,9 @@ compatibility_date = "2022-06-13"
 command = "node ./build.js"
 
 [triggers]
-crons = [ "*/3 * * * *" ]
+# crons = [ "*/10 * * * *" ] # every 10 mins
+crons = [ "0 0 * * *" ] # daily, at midnight UTC
+
 
 [vars]
 RUN_QUERY_ENDPOINT = "https://helix-pages.anywhere.run/helix-services/run-query@v3"
